@@ -16,15 +16,15 @@ import java.util.List;
 public class WorkerResource {
 
     @Autowired
-    private WorkerRepository resposiry;
+    private WorkerRepository repository;
 
     @GetMapping
     public ResponseEntity<List<Worker>> findAll() {
-        return ResponseEntity.ok(resposiry.findAll());
+        return ResponseEntity.ok(repository.findAll());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Worker> findById(@PathVariable Long id) {
-        return ResponseEntity.ok(resposiry.findWorkerById(id));
+        return ResponseEntity.ok(repository.findWorkerById(id));
     }
 }
