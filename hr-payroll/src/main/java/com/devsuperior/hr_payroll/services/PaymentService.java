@@ -2,6 +2,7 @@ package com.devsuperior.hr_payroll.services;
 
 import com.devsuperior.hr_payroll.entities.Payment;
 import com.devsuperior.hr_payroll.entities.Worker;
+import com.devsuperior.hr_payroll.feingclients.WorkerFeingClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -13,17 +14,11 @@ import java.util.Map;
 @Service
 public class PaymentService {
 
-    @Value("${hr-worker.host}")
-    private String workerHost;
-
     @Autowired
-    private RestTemplate restTemplate;
+    private WorkerFeingClient workerFeingClient;
 
     public Payment getPayment(Long workerId, Integer days) {
-        Map<String, String> uriVariables = new HashMap<>();
-        uriVariables .put("id", workerId.toString());
-
-        Worker worker = restTemplate.getForObject(workerHost + "/workers/{id}", Worker.class, uriVariables);
+        Worker worker = workerFeingClient.findById(workerId).getBody();
 
         assert worker != null;
         return new Payment(worker.getName(), worker.getDailyIncome(), days);
