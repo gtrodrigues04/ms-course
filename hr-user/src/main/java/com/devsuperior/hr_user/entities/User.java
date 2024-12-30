@@ -24,6 +24,7 @@ public class User implements Serializable {
 
     private String password;
 
+    @Column(unique = true)
     private String email;
 
     @ManyToMany(fetch = FetchType.EAGER)
