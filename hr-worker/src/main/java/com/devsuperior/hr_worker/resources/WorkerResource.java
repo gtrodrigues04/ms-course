@@ -21,9 +21,6 @@ import java.util.List;
 @RequestMapping(value = "/workers")
 public class WorkerResource {
 
-    @Value("${test.config}")
-    private String testConfig;
-
     private static Logger logger = LoggerFactory.getLogger(WorkerResource.class);
 
     @Autowired
@@ -46,7 +43,6 @@ public class WorkerResource {
 
     @GetMapping("/configs")
     public ResponseEntity<?> findConfig(){
-        logger.info("CONFIG = " + testConfig);
         return ResponseEntity.noContent().build();
     }
 }
