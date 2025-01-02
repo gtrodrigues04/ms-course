@@ -1,7 +1,8 @@
 package com.devsuperior.hr_api_gateway_zuul.config;
 
-import com.netflix.discovery.converters.Auto;
-import org.apache.catalina.filters.CorsFilter;
+import java.util.Arrays;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -16,8 +17,7 @@ import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-
-import java.util.Arrays;
+import org.springframework.web.filter.CorsFilter;
 
 @Configuration
 @EnableResourceServer
@@ -26,9 +26,11 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
     @Autowired
     private JwtTokenStore tokenStore;
 
-    private static final String[] PUBLIC = { "/hr-oauth/oauth/token"};
-    private static final String[] OPERATOR = { "/hr-worker/**"};
-    private static final String[] ADMIN = { "/hr-payroll/**", "/hr-payroll/**", "/actuator/**", "/hr-worker/acutator/**", "/hr-oauth/actuator/**"};
+    private static final String[] PUBLIC = { "/hr-oauth/oauth/token" };
+
+    private static final String[] OPERATOR = { "/hr-worker/**" };
+
+    private static final String[] ADMIN = { "/hr-payroll/**", "/hr-user/**", "/actuator/**", "/hr-worker/actuator/**", "/hr-oauth/actuator/**" };
 
     @Override
     public void configure(ResourceServerSecurityConfigurer resources) throws Exception {
@@ -37,6 +39,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
     @Override
     public void configure(HttpSecurity http) throws Exception {
+
         http.authorizeRequests()
                 .antMatchers(PUBLIC).permitAll()
                 .antMatchers(HttpMethod.GET, OPERATOR).hasAnyRole("OPERATOR", "ADMIN")
@@ -49,8 +52,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration corsConfig = new CorsConfiguration();
-
-        corsConfig.setAllowedOrigins(Arrays.asList("*")); // Evite "*" em produção por razões de segurança
+        corsConfig.setAllowedOrigins(List.of("*"));
         corsConfig.setAllowedMethods(Arrays.asList("POST", "GET", "PUT", "DELETE", "PATCH"));
         corsConfig.setAllowCredentials(true);
         corsConfig.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
@@ -62,10 +64,9 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
     @Bean
     public FilterRegistrationBean<CorsFilter> corsFilter() {
-        FilterRegistrationBean<CorsFilter> bean = new FilterRegistrationBean<>();
-        bean.setFilter(new CorsFilter()); // Configura o filtro
-        bean.setOrder(Ordered.HIGHEST_PRECEDENCE); // Define a prioridade do filtro
+        FilterRegistrationBean<CorsFilter> bean
+                = new FilterRegistrationBean<>(new CorsFilter(corsConfigurationSource()));
+        bean.setOrder(Ordered.HIGHEST_PRECEDENCE);
         return bean;
     }
-
 }
