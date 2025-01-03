@@ -2,11 +2,7 @@
 
 Este projeto é uma implementação de arquitetura de microsserviços em Spring e Spring Cloud. Para seu desenvolvimento foram utilizadas as ferramentas:
 
-Balanceamento de Carga com Ribbon
-Eureka para registro dos microsserviços
-Zuul para roteamento com portas dinâmicas
-Hystrix para tolerância a falhas
-JWT para autenticação de usuário e autorização para acesso aos recursos do sistema
+Balanceamento de Carga com Ribbon, Eureka para registro dos microsserviços, Zuul para roteamento com portas dinâmicas, Hystrix para tolerância a falhas, JWT para autenticação de usuário e autorização para acesso aos recursos do sistema e
 Docker para criação dos containers de todos os microsserviços para tornar a aplicação escalável
 
 
